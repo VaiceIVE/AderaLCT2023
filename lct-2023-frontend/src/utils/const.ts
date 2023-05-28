@@ -1,0 +1,10 @@
+export const HOME_ROUTE = '/';
+export const LOGIN_ROUTE = '/login';
+export const REGISTRATION_ROUTE = '/registration';
+export const ACCOUNT_ROUTE = '/account';
+export const HISTORY_ROUTE = '/history';
+export const ANALYSIS_ROUTE = '/analysis';
+export const DATABASE_ROUTE = '/database';
+export const CURRENT_ANALYSIS_ROUT = '/analysis';
+export const HELP_ROUTE = '/help';
+export const MAPS_ROUTE = '/maps';

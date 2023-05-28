@@ -1,0 +1,292 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Агент хранения необработанных файлов",
+    "description": "Агент для хранения файлов, полученных от пользователей и со сторонних API написанный на NodeJS",
+    "version": "1.0.0"
+  },
+  "host": "http://185.177.219.117:8005",
+  "basePath": "/",
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/upload": {
+      "post": {
+        "description": "Метод для загрузки одного файла в файловую систему",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "parameters": [
+          {
+            "name": "file",
+            "in": "formData",
+            "type": "file",
+            "required": true,
+            "description": "Входящий файл"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Информация о названии файла в файловой системе хранилища",
+            "schema": {
+              "type": "string",
+              "example": "FileAdressPlusDate.xlsx",
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/file/{filename}": {
+      "get": {
+        "description": "Метод для получения файла по названию из файловой системы хранилища",
+        "produces": [
+          "attachment; filename="
+        ],
+        "parameters": [
+          {
+            "name": "filename",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "schema": {
+              "type": "string",
+              "example": "FileAdressPlusDate.xlsx"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Файл, если есть",
+            "schema": {
+              "type": "string",
+              "example": "FileAdressPlusDate.xlsx",
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/url": {
+      "post": {
+        "description": "Метод, выполняющий загрузку файлов таблиц с данными со стороннего сервиса, адрес которого указан в запросе. Типы файлов, которые необходимо искать на сервисе передаются массивом вутри запроса.",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Адрес сервиса, с которого будут получаться данные и типы получаемых таблиц",
+            "schema": {
+              "$ref": "#/definitions/UrlData"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Имена файлов в файловой системе хранилища",
+            "schema": {
+              "type": "array",
+              "example": [
+                "FirstFileAdressPlusDate.xlsx",
+                "SecondFileAdressPlusDate.xlsx"
+              ],
+              "items": {
+                "type": "string"
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/list": {
+      "get": {
+        "description": "Метод для получения имен таблиц в файловой системе хранилища.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Имена файлов в файловой системе хранилища",
+            "schema": {
+              "type": "array",
+              "example": [
+                "FirstFileAdressPlusDate.xlsx",
+                "SecondFileAdressPlusDate.xlsx"
+              ],
+              "items": {
+                "type": "string"
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "UrlData": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "example": "http://185.177.219.117:8005"
+        },
+        "types": {
+          "type": "array",
+          "example": [
+            "buildings",
+            "appeals"
+          ],
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "url",
+        "types"
+      ]
+    },
+    "UserResponse": {
+      "type": "object",
+      "properties": {
+        "refreshToken": {
+          "type": "string",
+          "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.ey3JlbWFpbCI6InNva29sb3Zyb21hbjI1NkBnbWFpbC5jb20iLCJpZCI6IjY0Njc3YjY2MzdkNTljN2QyYTE4ZDU4MyIsInVzZXJuYW1lIjoi0KHQvtC60L7Qu9C-0LIg0KDQvtC80LDQvSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNjg0ODQ4MjkzLCJleHAiOjE2ODY5MjE4OTN9.nvOexFSAQnIFeqT9nv73QnHDWFhoqXKim7TJObvnm_o"
+        },
+        "accessToken": {
+          "type": "string",
+          "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNva29sb3Zyb21hbjI1NkBnbWFpbC5jb20iLCJpZCI6IjY0Njc3YjY2MzdkNTljN2QyYTE4ZDU4MyIsInVzZXJuYW1lIjoi0KHQvtC60L7Qu9C-asddlkfvjsdjhfvblakwjhdvfblkjwvbfhkhssd4MjkzLCJleHAiOjE2ODY5MjE4OTN9.nv'lkgjgwljfghojejfhgsdfgkjsdhfhggalsgajfhg'_o"
+        },
+        "user": {
+          "type": "object",
+          "properties": {
+            "username": {
+              "type": "string",
+              "example": "Соколов Роман"
+            },
+            "id": {
+              "type": "string",
+              "example": "646b156e5f5735bddb9db7fd"
+            },
+            "email": {
+              "type": "string",
+              "example": "sokolovroman@mail.ru"
+            },
+            "role": {
+              "type": "string",
+              "example": "Старший аналитик"
+            }
+          },
+          "required": [
+            "username",
+            "id",
+            "email",
+            "role"
+          ]
+        }
+      },
+      "required": [
+        "refreshToken",
+        "accessToken"
+      ]
+    },
+    "UserReg": {
+      "type": "object",
+      "properties": {
+        "username": {
+          "type": "string",
+          "example": "Соколов Роман"
+        },
+        "email": {
+          "type": "string",
+          "example": "sokolovroman@mail.ru"
+        },
+        "password": {
+          "type": "string",
+          "example": "Roma`s password"
+        },
+        "role": {
+          "type": "string",
+          "example": "Старший аналитик"
+        }
+      },
+      "required": [
+        "username",
+        "email",
+        "password",
+        "role"
+      ]
+    },
+    "UserLog": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "example": "sokolovroman@mail.ru"
+        },
+        "password": {
+          "type": "string",
+          "example": "Roma`s password"
+        },
+        "role": {
+          "type": "string",
+          "example": "Старший аналитик"
+        }
+      },
+      "required": [
+        "email",
+        "password",
+        "role"
+      ]
+    },
+    "RefreshToken": {
+      "type": "object",
+      "properties": {
+        "refreshToken": {
+          "type": "string",
+          "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.ey3JlbWFpbCI6InNva29sb3Zyb21hbjI1NkBnbWFpbC5jb20iLCJpZCI6IjY0Njc3YjY2MzdkNTljN2QyYTE4ZDU4MyIsInVzZXJuYW1lIjoi0KHQvtC60L7Qu9C-0LIg0KDQvtC80LDQvSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNjg0ODQ4MjkzLCJleHAiOjE2ODY5MjE4OTN9.nvOexFSAQnIFeqT9nv73QnHDWFhoqXKim7TJObvnm_o"
+        }
+      },
+      "required": [
+        "refreshToken"
+      ]
+    },
+    "AccessToken": {
+      "type": "object",
+      "properties": {
+        "accessToken": {
+          "type": "string",
+          "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNva29sb3Zyb21hbjI1NkBnbWFpbC5jb20iLCJpZCI6IjY0Njc3YjY2MzdkNTljN2QyYTE4ZDU4MyIsInVzZXJuYW1lIjoi0KHQvtC60L7Qu9C-asddlkfvjsdjhfvblakwjhdvfblkjwvbfhkhssd4MjkzLCJleHAiOjE2ODY5MjE4OTN9.nv'lkgjgwljfghojejfhgsdfgkjsdhfhggalsgajfhg'_o"
+        }
+      },
+      "required": [
+        "accessToken"
+      ]
+    },
+    "LogOut": {
+      "type": "object",
+      "properties": {
+        "acknowledged": {
+          "type": "boolean",
+          "example": true
+        },
+        "deletedCount": {
+          "type": "number",
+          "example": 1
+        }
+      },
+      "required": [
+        "acknowledged",
+        "deletedCount"
+      ]
+    }
+  }
+}

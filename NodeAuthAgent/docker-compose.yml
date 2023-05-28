@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  node:
+    build: .
+    ports:
+      - 8001:80
+    environment:
+      - PORT=80
+      

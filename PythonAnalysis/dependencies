@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+gunicorn
+python-dotenv
+openpyxl
+pymongo
+pandas
+catboost
+requests
+pullenti_wrapper
+pullenti
