@@ -4,5 +4,5 @@ services:
   py:
     build: .
     ports:
-      - 8900:80
+      - 8003:80
       

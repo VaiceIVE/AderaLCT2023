@@ -142,9 +142,10 @@ def analyze_basic():
 
     id = Save(analysis_result)
 
-    analysis_result['id'] = id
+    analysis_result.pop('_id')
+    analysis_result['id'] = str(id)
     #print(analysis_result)
-    
+
     return analysis_result
 
 
