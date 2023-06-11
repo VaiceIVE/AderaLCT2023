@@ -3,4 +3,5 @@ export interface IAnalysisResult {
     workname: string[];
     priority: string;
     stats: object;
+    causes: string[];
 }

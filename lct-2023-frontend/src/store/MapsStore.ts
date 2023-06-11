@@ -2,7 +2,7 @@ import { makeAutoObservable } from "mobx";
 
 export default class MapsStore {
     addresses: string[] = [];
-    priority: string[] = [];
+    causes: string[][] = [];
     workname: string[][] = [];
 
     constructor() {
@@ -13,8 +13,8 @@ export default class MapsStore {
         this.addresses.push(address);
     };
 
-    setPriority(priority: string) {
-        this.priority.push(priority);
+    setCauses(causes: string[]) {
+        this.causes.push(causes);
     }
 
     setWorkname(workname: string[]) {
@@ -23,7 +23,7 @@ export default class MapsStore {
 
     mapsClear() {
         this.addresses = [];
-        this.priority = [];
+        this.causes = [];
         this.workname = [];
     }
 }

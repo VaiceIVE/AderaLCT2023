@@ -7,7 +7,7 @@ import { Context } from "../../../main";
 
 const MapComponent = () => {
     const location = useLocation();
-    const [markers, setMarkers] = useState <{x: number, y: number, address: string, priority: string, workname: string[]}[]>([]);
+    const [markers, setMarkers] = useState <{x: number, y: number, address: string, causes: string[], workname: string[]}[]>([]);
     const { MStore } = useContext(Context);
 
     useEffect(() => {
@@ -22,7 +22,7 @@ const MapComponent = () => {
                         numberArray.push(+stringArray[j]);
                     };
                     setMarkers(item => [...item!, {x: numberArray[1], y: numberArray[0], 
-                        address: MStore.addresses[i], priority: MStore.priority[i], workname: MStore.workname[i]}]);
+                        address: MStore.addresses[i], causes: MStore.causes[i], workname: MStore.workname[i]}]);
                 })
             } catch (error) {
                 console.log(error)
@@ -52,16 +52,24 @@ const MapComponent = () => {
                     <Placemark
                         key={index} 
                         defaultGeometry={[item.x, item.y]}
-                        modules={["geoObject.addon.hint"]}
+                        modules={["geoObject.addon.hint", "geoObject.addon.balloon"]}
                         properties={{
-                            hintContent: `${item.address}`,
-                            iconContent: `${item.workname.length}`
+                            hintContent: `${!item.address.indexOf('внутригородская') ? 
+                            item.address.slice(item.address.indexOf(',')+1).trim() :
+                            item.address}`,
+                            iconContent: `${item.workname.length}`,
+                            balloonContentHeader: `${!item.address.indexOf('внутригородская') ? 
+                            item.address.slice(item.address.indexOf(',')+1).trim() :
+                            item.address} <br/>`,
+                            balloonContentBody: `${item.workname.map(work => {
+                                return (`• ${work} <br/>`)
+                            })}`,
                         }}
                         options={{
-                            preset: 
-                            item.priority === 'Плановая работа' ? 'islands#blackCircleDotIcon' : 
-                            'islands#orangeCircleDotIcon',
-                            iconImageSize: [16, 16]
+                            preset:
+                            item.causes ? item.causes.length === 0 ? 'islands#blackCircleDotIcon' :
+                            'islands#orangeCircleDotIcon' : 'islands#blackCircleDotIcon',
+                            iconImageSize: [16, 16],
                         }}
                     />
                 ))}

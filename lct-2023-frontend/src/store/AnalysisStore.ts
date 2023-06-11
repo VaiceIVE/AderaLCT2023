@@ -12,6 +12,7 @@ export default class AnalysisStore {
     constructor() {
         makeAutoObservable(this);
         this.currentBaseAnalysis = undefined;
+        this.currentSmartAnalysis = undefined;
     }
 
     setBaseLoading(isLoading: boolean) {
@@ -62,5 +63,18 @@ export default class AnalysisStore {
     };
 
 
+    async smartAnalysisURL(object: string, 
+        date: [Date | null, Date | null], work: string, url: string) {
+        this.setSmartLoading(true);
+        try {
+            const response = await AnalysisServices.smartAnalysisUrl(object, date, work, url);
+            console.table(response.data);
+            this.setCurrentSmartAnalysis(response.data);
+        } catch (e: any) {
+            console.log(e.response?.data?.message);
+        } finally {
+            this.setSmartLoading(false);
+        }
+    };
 
 };

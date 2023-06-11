@@ -14,7 +14,7 @@ const HistoryList = () => {
         try {
             HistoryServices.fetchHistory().then((response) => {
                 if (!isCancelled) { 
-                    HStore.setHistory(response.data);
+                    HStore.setHistory(response.data.sort((a, b) => a.date > b.date ? -1 : 1));
                 }
             });
         } catch (e) {

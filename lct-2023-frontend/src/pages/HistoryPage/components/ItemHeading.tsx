@@ -21,7 +21,7 @@ const ItemHeading = (props: {type: string, date: string}) => {
     return (
         <Flex align="center" justify="space-between">
             {title()}
-            <Text size="lg" lh={'24px'} color="gray.5">{props.date}</Text>
+            <Text size="lg" lh={'24px'} color="gray.5">{props.date.split(".").reverse().join(".")}</Text>
         </Flex>
     );
 };

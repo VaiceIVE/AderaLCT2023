@@ -6,7 +6,7 @@ const AnalysisTypes = () => {
 
     return (
         <BlockWrapper>
-            Виды анлиза
+            Виды анализа
             <Stack spacing={8}>
                 <AnalysisWrapper>
                     Базовый анализ

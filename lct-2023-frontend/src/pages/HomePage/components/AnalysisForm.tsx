@@ -39,9 +39,10 @@ const AnalysisForm = () => {
 
     const handlePost = async () => {
         if (origin === 'database') {
-            console.log(date)
             AStore.smartAnalysisDatabase(object, date, work);
-        }; 
+        } else if (origin === 'url') {
+            AStore.smartAnalysisURL(object, date, work, url);
+        };  
     };
 
     return (

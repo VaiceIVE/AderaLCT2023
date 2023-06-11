@@ -1,6 +1,6 @@
 import { useContext, useMemo } from 'react';
 import { MantineReactTable, MRT_ColumnDef } from 'mantine-react-table';
-import { Box, Button, Flex, List, MantineProvider, useMantineTheme } from '@mantine/core';
+import { Box, Button, Flex, List, MantineProvider, Tooltip, useMantineTheme } from '@mantine/core';
 import { IconArrowsMaximize, IconEdit, IconTrashX } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
 import { MAPS_ROUTE } from '../../../utils/const';
@@ -11,6 +11,7 @@ type IAnalysisResult = {
     workname: string[];
     adress: string;
     priority: string;
+    causes: string[];
 };
 
 const Example = (props: 
@@ -33,21 +34,45 @@ const Example = (props:
                 header: 'Адрес объекта',
             },
             {
-                accessorKey: 'priority', 
+                accessorKey: 'causes', 
                 header: 'Характеристика',
+                size: 100,
                 Cell: ({ cell }) => (
-                    <Box
-                        sx={(theme) => ({
-                            background: cell.getValue<string>() === 'Срочная работа' 
-                            ? theme.colors.red[7] : theme.colors.gray[9],
-                            borderRadius: '16px',
-                            color: '#fff',
-                            padding: '4px 12px',
-                            display: 'inline-block'
-                        })}
+                    <>
+                    {!cell.getValue<string[]>() ? 
+                        <Box
+                            sx={(theme) => ({
+                                background: theme.colors.gray[9],
+                                borderRadius: '16px',
+                                color: '#fff',
+                                padding: '4px 12px',
+                                display: 'inline-block',
+                                cursor: 'pointer'
+                            })}
+                        >
+                            Плановая работа
+                        </Box>
+                    :
+                    <Tooltip label={!cell.getValue<string[]>().indexOf('МосГаз') ? 
+                        cell.getValue<string[]>().indexOf('Авария') ? 'МосГаз, Аварийность' : 'МосГаз'
+                        : !cell.getValue<string[]>().indexOf('Авария') ? 'Аварийность' : undefined}
+                        disabled={cell.getValue<string[]>().length === 0}
                     >
-                        Плановая работа
-                    </Box>
+                        <Box
+                            sx={(theme) => ({
+                                background: cell.getValue<string[]>().length != 0 
+                                ? theme.colors.red[7] : theme.colors.gray[9],
+                                borderRadius: '16px',
+                                color: '#fff',
+                                padding: '4px 12px',
+                                display: 'inline-block',
+                                cursor: 'pointer'
+                            })}
+                        >
+                            {cell.getValue<string[]>().length === 0 ? 'Плановая работа' : 'Срочная работа'}
+                        </Box>
+                    </Tooltip>}
+                    </>
                 ),
             },
             {
@@ -77,14 +102,16 @@ const Example = (props:
             }}
         >
         <MantineReactTable
-            initialState={{ showColumnFilters: true }}
+            initialState={{ showColumnFilters: true, showGlobalFilter: true, }}
+            enableGlobalFilterModes={false}
+            enableFilterMatchHighlighting
+            enableGlobalFilterRankedResults={false}
             columns={columns}
             data={props.result}
             enableColumnOrdering
             enablePinning
             enableRowActions
             enableRowSelection
-            enableSorting
             enableColumnActions={false}
             enableColumnDragging={false}
             enableToolbarInternalActions={false}
@@ -140,7 +167,7 @@ const Example = (props:
                     MStore.mapsClear();
                     table.getSelectedRowModel().flatRows.map((row) => {
                         MStore.setAddresses(row.getValue('adress'));
-                        MStore.setPriority(row.getValue('priority'));
+                        MStore.setCauses(row.getValue('causes'));
                         MStore.setWorkname(row.getValue('workname'));
                     });
                     navigate(MAPS_ROUTE);
@@ -169,6 +196,9 @@ const Example = (props:
                 return (
                     <Flex gap={10} align="center">
                         <IconArrowsMaximize
+                            onClick={() => 
+                                props.handleModalOpen(cell.row._valuesCache.adress)}
+                            style={{cursor: 'pointer'}} 
                             stroke={'2'} 
                             color={theme.colors.gray[9]}/>
                         <IconEdit

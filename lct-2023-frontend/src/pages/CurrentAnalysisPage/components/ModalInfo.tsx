@@ -21,7 +21,11 @@ const ModalInfo = (props: {handleModalInfoClose: Function, adress: string, resul
             <Flex align="center" justify="space-between">
                 <Flex align="center" gap={8}>
                     <IconMapPin stroke={'2'} color={theme.colors.red[7]}/>
-                    <Title size="h4" color="gray.9">{`Дом по адресу ${props.adress}`}</Title>
+                    <Title size="h5" color="gray.9">{`Дом по адресу 
+                        ${!props.adress.indexOf('внутригородская') ? props.adress.slice(props.adress.indexOf(',')+1).trim() :
+                        props.adress
+                        }`}
+                    </Title>
                 </Flex>
                 <IconX
                     onClick={() => props.handleModalInfoClose()}

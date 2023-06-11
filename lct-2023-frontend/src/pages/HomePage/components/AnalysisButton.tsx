@@ -26,6 +26,7 @@ const AnalysisButton = ({children, toggle, opened}: AnalysisButtonProps) => {
                     () => navigate(CURRENT_ANALYSIS_ROUT + '/' + 0) :
                     () => AStore.baseAnalysis()
                 }
+                disabled={AStore.isSmartLoading}
             >
                 {AStore.currentBaseAnalysis ? 'К результату' : 'Начать'}
             </Button>
